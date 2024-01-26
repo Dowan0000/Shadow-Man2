@@ -19,14 +19,11 @@ void UT1GameInstance::Init()
 		SessionInterface = Subsystem->GetSessionInterface();
 		if (SessionInterface.IsValid())
 		{
-			/*SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UT2GameInstance::OnCreateSessionComplete);
-			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UT2GameInstance::OnDestroySessionComplete);
-			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UT2GameInstance::OnFindSessionsComplete);
-			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UT2GameInstance::OnJoinSessionComplete);*/
-
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UT1GameInstance::OnCreateSessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UT1GameInstance::OnFindSessionsComplete);
 			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UT1GameInstance::OnJoinSessionComplete);
+			
+			//SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UT1GameInstance::OnDestroySessionComplete);
 		}
 	}
 }
@@ -37,7 +34,8 @@ void UT1GameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Session created"));
 
-		GetWorld()->ServerTravel("/Game/ThirdPerson/Maps/ThirdPersonMap?listen");
+		GetWorld()->ServerTravel("/Game/Maps/GameLevel?listen");
+
 	}
 	else
 	{
@@ -67,16 +65,6 @@ void UT1GameInstance::OnFindSessionsComplete(bool Success)
 void UT1GameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type Result)
 {
 	UE_LOG(LogTemp, Warning, TEXT("OnJoinSessionComplete"));
-
-	/*if(APlayerController* PlayerController = GetFirstLocalPlayerController())
-	{
-		FString JoinAddress;
-		if(SessionInterface->GetResolvedConnectString(SessionName, JoinAddress))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Join Address : %s"), *JoinAddress);
-			PlayerController->ClientTravel(JoinAddress, ETravelType::TRAVEL_Absolute);
-		}
-	}*/
 
 	if (APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0))
 	{
